@@ -86,6 +86,7 @@ def load_img():
 def predict(model, new_img):
     predictions = model.predict(new_img)
     found_prediction = False
+    print("Predictions:")
     print(predictions)
     for index in range(0,9):
         if predictions[0][index] > 0.5:
