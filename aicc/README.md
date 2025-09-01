@@ -5,3 +5,5 @@ Original code was https://colab.research.google.com/drive/1NyYH1EPpaJlMBLK0fcKYz
 Learned about Keras API and followed https://keras.io/examples/vision/mnist_convnet/ to train the model.
 
 Prerequisite: Install Keras, Tensorflow (or PyTorch etc).
+
+The image is created with Gemini and resized with Photoshop.
