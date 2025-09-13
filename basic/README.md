@@ -1,0 +1,1 @@
+Some basic ai/ml trials for simple algorithms such as linear regression, logic regression etc.
