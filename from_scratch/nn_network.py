@@ -1,6 +1,10 @@
 import copy
 import numpy as np
 
+"""
+This file contains the implementation for training a neural network with two layers
+from scratch including forward propagation and backward propagation
+"""
 
 def layer_sizes(X, Y):
     """
