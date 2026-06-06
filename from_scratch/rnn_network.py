@@ -168,3 +168,83 @@ def lstm_forward(x, a0, parameters):
     caches = (caches, x)
 
     return a, y, c, caches
+
+
+def rnn_cell_backward(da_next, cache):
+    """
+    Implements the backward pass for the RNN-cell (single time-step).
+
+    Arguments:
+    da_next -- Gradient of loss with respect to next hidden state
+    cache -- needed data from the forward pass of the current time-step
+
+    Returns:
+    gradients -- python dictionary containing:
+                        dx -- Gradients of input data, of shape (n_x, m)
+                        da_prev -- Gradients of previous hidden state, of shape (n_a, m)
+                        dWax -- Gradients of input-to-hidden weights, of shape (n_a, n_x)
+                        dWaa -- Gradients of hidden-to-hidden weights, of shape (n_a, n_a)
+                        dba -- Gradients of bias vector, of shape (n_a, 1)
+    """
+    
+    (a_next, a_prev, xt, parameters) = cache
+    Wax = parameters["Wax"]
+    Waa = parameters["Waa"]
+    Wya = parameters["Wya"]
+    ba = parameters["ba"]
+    by = parameters["by"]
+
+    dtanh = da_next*(1-np.tanh(np.dot(Wax, xt) + np.dot(Waa, a_prev)+ba)**2)
+    dxt = np.dot(Wax.T, dtanh)
+    dWax = np.dot(dtanh, xt.T)
+    da_prev = np.dot(Waa.T, dtanh)
+    dWaa = np.dot(dtanh, a_prev.T)
+    dba = np.sum(dtanh, axis=1, keepdims=True)
+
+    gradients = {"dxt": dxt, "da_prev": da_prev, "dWax": dWax, "dWaa": dWaa, "dba": dba}
+    
+    return gradients
+
+
+def rnn_backward(da, caches):
+    """
+    Implement the backward pass for a RNN over an entire sequence of input data.
+
+    Arguments:
+    da -- Upstream gradients of all hidden states, of shape (n_a, m, T_x)
+    caches -- needed data from the forward pass of the current time-step
+    
+    Returns:
+    gradients -- python dictionary containing:
+                        dx -- the input data gradient, numpy-array of shape (n_x, m, T_x)
+                        da0 -- the initial hidden state gradient, numpy-array of shape (n_a, m)
+                        dWax -- the input's weight matrix gradient, numpy-array of shape (n_a, n_x)
+                        dWaa -- the hidden state's weight matrix gradient, numpy-arrayof shape (n_a, n_a)
+                        dba -- the bias gradient, of shape (n_a, 1)
+    """
+        
+    (caches, x) = caches
+    (a1, a0, x1, parameters) = caches[0]
+    n_a, m, T_x = da.shape
+    n_x, m = x1.shape 
+    
+    dx = np.zeros((n_x, m, T_x))
+    dWax = np.zeros((n_a, n_x))
+    dWaa = np.zeros((n_a, n_a))
+    dba = np.zeros((n_a, 1))
+    da0 = np.zeros((n_a, m))
+    da_prevt = np.zeros((n_a, m))
+    
+    for t in reversed(range(T_x)):
+        # Compute gradients for time step t. Use da_prevt to pass the gradient of the hidden state to the previous time step
+        gradients = rnn_cell_backward(da[:, :, t] + da_prevt, caches[t])
+        dxt, da_prevt, dWaxt, dWaat, dbat = gradients["dxt"], gradients["da_prev"], gradients["dWax"], gradients["dWaa"], gradients["dba"]
+        dx[:, :, t] = dxt  
+        dWax += dWaxt  
+        dWaa += dWaat  
+        dba += dbat  
+        
+    da0 = da_prevt
+    gradients = {"dx": dx, "da0": da0, "dWax": dWax, "dWaa": dWaa,"dba": dba}
+    
+    return gradients
