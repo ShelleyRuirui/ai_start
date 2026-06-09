@@ -4,7 +4,7 @@
 
 A vanilla recurrent neural network processes a sequence one step at a time. At each time step $t$, the cell takes the input vector $x^{(t)}$ and the previous hidden state $a^{(t-1)}$ to produce a new hidden state $a^{(t)}$.
 
-![RNN sequence](images/rnn/rnn_sequence.png)
+![RNN sequence](./images/rnn/rnn_sequence.png)
 
 This sequence diagram shows how the RNN cell is reused across time steps and how the hidden state flows forward from `t-1` to `t`.
 
@@ -17,10 +17,10 @@ $$
 $$
 
 $$
- \hat{y}^{(t)} = \operatorname{softmax}\bigl(W_{ya} a^{(t)} + b_y\bigr)
+ \hat{y}^{(t)} = \text{softmax}\left(W_{ya} a^{(t)} + b_y\right)
 $$
 
-![RNN forward propagation graph and equation](images/rnn/rnn_forward_propagation_graph_and_equation.png)
+![RNN forward propagation graph and equation](./images/rnn/rnn_forward_propagation_graph_and_equation.png)
 
 The RNN cell graph shows the combination of input and recurrent state, the bias addition, the `tanh` activation, and the output softmax layer.
 
@@ -28,7 +28,7 @@ The RNN cell graph shows the combination of input and recurrent state, the bias 
 
 The backward propagation diagram summarizes how gradients flow through time into the recurrent weights and inputs.
 
-![RNN backward propagation equations](images/rnn/rnn_backward_propagation_equations.png)
+![RNN backward propagation equations](./images/rnn/rnn_backward_propagation_equations.png)
 
 Key steps in backpropagation through time include:
 
@@ -47,7 +47,7 @@ Key steps in backpropagation through time include:
 
 A long short-term memory (LSTM) cell is a gated RNN that helps preserve information over longer sequences. It uses forget, input, and output gates to control when information is written, retained, and exposed from the cell state.
 
-![LSTM graph](images/rnn/LSTM_graph.png)
+![LSTM graph](./images/rnn/LSTM_graph.png)
 
 ### LSTM core equations
 
@@ -75,9 +75,9 @@ $$
  a^{(t)} = o^{(t)} \odot \tanh\bigl(c^{(t)}\bigr)
 $$
 
-![LSTM full graph](images/rnn/LSTM_full_graph.png)
+![LSTM full graph](./images/rnn/LSTM_full_graph.png)
 
-![GRU and LSTM equations](images/rnn/gru_lstm_equations.jpg)
+![GRU and LSTM equations](./images/rnn/gru_lstm_equations.jpg)
 
 ### Why LSTM helps
 
@@ -86,8 +86,8 @@ $$
 - The output gate `o^(t)` decides how much of the cell state is exposed as the hidden state.
 - This gating reduces vanishing gradient problems by providing a more direct path for gradients through the cell state.
 
-![LSTM backward propagation equations](images/rnn/LSTM_backward_propagation_equations.png)
+![LSTM backward propagation equations](./images/rnn/LSTM_backward_propagation_equations.png)
 
 The second backward diagram expands on how gradients propagate through the gates and cell state during backpropagation through time.
 
-![LSTM backward propagation equations 2](images/rnn/LSTM_backward_propagation_equations_2.png)
+![LSTM backward propagation equations 2](./images/rnn/LSTM_backward_propagation_equations_2.png)
