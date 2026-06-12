@@ -1,1 +1,4 @@
 .DS_Store
+# Ignore downloaded datasets for music composer
+projects/music_composer/dataset/blues/
+projects/music_composer/dataset/jazz/
