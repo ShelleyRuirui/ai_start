@@ -1,7 +1,7 @@
 import warnings
-
 import os
 import numpy as np
+from collections import Counter
 from music21 import converter, note, chord
 
 # ===================== 全局配置 =====================
@@ -9,9 +9,11 @@ from music21 import converter, note, chord
 warnings.filterwarnings("ignore")
 
 GENRE_MAP = {"jazz": 0, "blues": 1}
-SEQ_LENGTH = 128
+SEQ_LENGTH = 64
 DATASET_ROOT = "../dataset"
 REST_SYMBOL = "REST"
+# 词表压缩配置：保留出现次数 >=3 的token，可自行调整
+MIN_TOKEN_COUNT = 15
 # ====================================================
 
 all_token_sequences = []
@@ -74,23 +76,39 @@ for idx, (midi_path, g_id) in enumerate(zip(all_midi_files, all_midi_genre_ids))
         all_token_sequences.append(seq_tokens)
         all_genre_labels.append(g_id)
 
-# 构建词表映射
-all_tokens = []
+# ========== 新增：统计token频次、过滤低频，缩小vocab ==========
+# 收集全部token
+all_tokens_flat = []
 for seq in all_token_sequences:
-    all_tokens.extend(seq)
-unique_tokens = sorted(set(all_tokens))
-vocab_size = len(unique_tokens)
-token_to_idx = {t: i for i, t in enumerate(unique_tokens)}
-idx_to_token = {i: t for i, t in enumerate(unique_tokens)}
+    all_tokens_flat.extend(seq)
+
+# 统计每个token出现次数
+token_counter = Counter(all_tokens_flat)
+# 只保留出现次数 >= MIN_TOKEN_COUNT 的高频token
+valid_tokens = [tok for tok, cnt in token_counter.items() if cnt >= MIN_TOKEN_COUNT]
+
+# 构建新映射，增加未知标记OOV（低频token统一映射到0）
+token_to_idx = {"<OOV>": 0}
+for idx, tok in enumerate(valid_tokens, start=1):
+    token_to_idx[tok] = idx
+idx_to_token = {v: k for k, v in token_to_idx.items()}
+vocab_size = len(token_to_idx)
+
+print(f"\n词表压缩完成：")
+print(f"原始全部唯一token数：{len(token_counter)}")
+print(f"过滤后有效高频token数：{vocab_size}")
+print(f"出现少于{MIN_TOKEN_COUNT}次的音符/和弦统一归为<OOV>\n")
+# ==============================================================
 
 # 滑动窗口生成训练集
 X_seq = []
 X_genre = []
 y_target = []
 
-print("\n开始构造训练滑动窗口样本...")
+print("开始构造训练滑动窗口样本...")
 for seq, g_label in zip(all_token_sequences, all_genre_labels):
-    seq_indexed = [token_to_idx[t] for t in seq]
+    # 低频token自动替换为<OOV>编号0
+    seq_indexed = [token_to_idx.get(tok, 0) for tok in seq]
     for i in range(len(seq_indexed) - SEQ_LENGTH):
         X_seq.append(seq_indexed[i:i+SEQ_LENGTH])
         X_genre.append(g_label)
@@ -117,6 +135,6 @@ print("=" * 50)
 print(f"预处理完成")
 print(f"有效乐曲总数: {len(all_token_sequences)}")
 print(f"训练样本总数: {len(X_seq)}")
-print(f"词汇表总大小: {vocab_size}")
+print(f"词汇表压缩后大小: {vocab_size}")
 print(f"数据已保存至 train_data.npz")
 print("=" * 50)

@@ -1,0 +1,82 @@
+Model: "model"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ input_1 (InputLayer)           [(None, 64)]         0           []                               
+                                                                                                  
+ embedding (Embedding)          (None, 64, 64)       578304      ['input_1[0][0]']                
+                                                                                                  
+ input_2 (InputLayer)           [(None, 1)]          0           []                               
+                                                                                                  
+ lstm (LSTM)                    (None, 64, 64)       33024       ['embedding[0][0]']              
+                                                                                                  
+ embedding_1 (Embedding)        (None, 1, 64)        192         ['input_2[0][0]']                
+                                                                                                  
+ lstm_1 (LSTM)                  (None, 64)           33024       ['lstm[0][0]']                   
+                                                                                                  
+ flatten (Flatten)              (None, 64)           0           ['embedding_1[0][0]']            
+                                                                                                  
+ dropout (Dropout)              (None, 64)           0           ['lstm_1[0][0]']                 
+                                                                                                  
+ dense (Dense)                  (None, 128)          8320        ['flatten[0][0]']                
+                                                                                                  
+ concatenate (Concatenate)      (None, 192)          0           ['dropout[0][0]',                
+                                                                  'dense[0][0]']                  
+                                                                                                  
+ dense_1 (Dense)                (None, 128)          24704       ['concatenate[0][0]']            
+                                                                                                  
+ dense_2 (Dense)                (None, 9036)         1165644     ['dense_1[0][0]']                
+                                                                                                  
+==================================================================================================
+Total params: 1,843,212
+Trainable params: 1,843,212
+Non-trainable params: 0
+__________________________________________________________________________________________________
+250400/250400 [==============================] - ETA: 0s - loss: 4.7781 - accuracy: 0.2314          
+Epoch 1: saving model to ./checkpoints/model_epoch_01_loss_4.78.h5
+250400/250400 [==============================] - 3103s 12ms/step - loss: 4.7781 - accuracy: 0.2314 - lr: 0.0020
+Epoch 2/100
+250399/250400 [============================>.] - ETA: 0s - loss: 4.4900 - accuracy: 0.2498   
+Epoch 2: saving model to ./checkpoints/model_epoch_02_loss_4.49.h5
+250400/250400 [==============================] - 3132s 13ms/step - loss: 4.4900 - accuracy: 0.2498 - lr: 0.0020
+Epoch 3/100
+250399/250400 [============================>.] - ETA: 0s - loss: 4.4977 - accuracy: 0.2481   
+Epoch 3: saving model to ./checkpoints/model_epoch_03_loss_4.50.h5
+250400/250400 [==============================] - 3125s 12ms/step - loss: 4.4977 - accuracy: 0.2481 - lr: 0.0020
+Epoch 4/100
+250400/250400 [==============================] - ETA: 0s - loss: 4.4365 - accuracy: 0.2528   
+Epoch 4: saving model to ./checkpoints/model_epoch_04_loss_4.44.h5
+250400/250400 [==============================] - 3120s 12ms/step - loss: 4.4365 - accuracy: 0.2528 - lr: 0.0020
+Epoch 5/100
+250397/250400 [============================>.] - ETA: 0s - loss: 4.3991 - accuracy: 0.2561   
+Epoch 5: saving model to ./checkpoints/model_epoch_05_loss_4.40.h5
+250400/250400 [==============================] - 3117s 12ms/step - loss: 4.3991 - accuracy: 0.2561 - lr: 0.0020
+Epoch 6/100
+250399/250400 [============================>.] - ETA: 0s - loss: 4.3881 - accuracy: 0.2569   
+Epoch 6: saving model to ./checkpoints/model_epoch_06_loss_4.39.h5
+250400/250400 [==============================] - 3112s 12ms/step - loss: 4.3881 - accuracy: 0.2569 - lr: 0.0020
+Epoch 7/100
+250400/250400 [==============================] - ETA: 0s - loss: 4.3763 - accuracy: 0.2576   
+Epoch 7: saving model to ./checkpoints/model_epoch_07_loss_4.38.h5
+250400/250400 [==============================] - 3118s 12ms/step - loss: 4.3763 - accuracy: 0.2576 - lr: 0.0020
+Epoch 8/100
+250399/250400 [============================>.] - ETA: 0s - loss: 4.5591 - accuracy: 0.2433   
+Epoch 8: saving model to ./checkpoints/model_epoch_08_loss_4.56.h5
+250400/250400 [==============================] - 3114s 12ms/step - loss: 4.5591 - accuracy: 0.2433 - lr: 0.0020
+Epoch 9/100
+250400/250400 [==============================] - ETA: 0s - loss: 5.7914 - accuracy: 0.1485   
+Epoch 9: saving model to ./checkpoints/model_epoch_09_loss_5.79.h5
+250400/250400 [==============================] - 3116s 12ms/step - loss: 5.7914 - accuracy: 0.1485 - lr: 0.0020
+Epoch 10/100
+250400/250400 [==============================] - ETA: 0s - loss: 5.8110 - accuracy: 0.1398   
+Epoch 10: saving model to ./checkpoints/model_epoch_10_loss_5.81.h5
+250400/250400 [==============================] - 3113s 12ms/step - loss: 5.8110 - accuracy: 0.1398 - lr: 0.0020
+Epoch 11/100
+250400/250400 [==============================] - ETA: 0s - loss: 5.7340 - accuracy: 0.1431   
+Epoch 11: saving model to ./checkpoints/model_epoch_11_loss_5.73.h5
+250400/250400 [==============================] - 3108s 12ms/step - loss: 5.7340 - accuracy: 0.1431 - lr: 0.0010
+Epoch 12/100
+250399/250400 [============================>.] - ETA: 0s - loss: 5.7514 - accuracy: 0.1437   
+Epoch 12: saving model to ./checkpoints/model_epoch_12_loss_5.75.h5
+250400/250400 [==============================] - 3117s 12ms/step - loss: 5.7514 - accuracy: 0.1437 - lr: 0.0010
+Training complete, model saved as music_lstm_genre_model.h5
